@@ -1,3 +1,8 @@
+/*
+ref : http://mongodb.github.io/mongo-scala-driver/1.0/scaladoc/index.html#org.mongodb.scala.MongoCollection
+
+ */
+
 package models
 
 import play.api.data.Form
@@ -65,10 +70,15 @@ object UserModel {
         return true
     }
 
-    def get(id: String) : Document = {
+    def get (id: String) : Document = {
         val result = collection.find(equal("_id", new ObjectId(id))).first().results()
         if(result.isEmpty) null
         else result.head
+    }
+
+    def search : Seq[Document] = {
+        val count = 10
+        collection.find().sort(descending("_id")).limit(count).results()
     }
 
     val userUpdateForm: Form[UserUpdate] = Form {

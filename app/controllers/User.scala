@@ -1,6 +1,3 @@
-/*
-ref : http://mongodb.github.io/mongo-scala-driver/1.0/scaladoc/index.html#org.mongodb.scala.MongoCollection
- */
 package controllers
 
 import models._
@@ -31,7 +28,15 @@ class User extends Controller {
     }
 
     def search = Action { implicit request =>
-          Ok("Got request [" + request + "]")
+        val result = UserModel.search
+        val list = result.map(res =>  Json.parse(res.toJson))
+        Ok(Json.parse("""
+            {
+              "status" : 200,
+              "msg" : "ok",
+              "result" : """ + Json.toJson(list) + """
+            }
+            """))
     }
 
     def get(id: String) = Action { implicit request =>
