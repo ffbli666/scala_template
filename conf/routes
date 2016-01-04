@@ -4,11 +4,11 @@
 
 # Home page
 GET     /                           controllers.Application.index
-POST    /api/user                   controllers.ApiUser.create
-GET     /api/user                   controllers.ApiUser.search
-GET     /api/user/:id               controllers.ApiUser.get(id: String)
-PUT     /api/user/:id               controllers.ApiUser.update(id: String)
-DELETE  /api/user/:id               controllers.ApiUser.delete(id: String)
+POST    /api/user                   controllers.User.create
+GET     /api/user                   controllers.User.search
+GET     /api/user/:id               controllers.User.get(id: String)
+PUT     /api/user/:id               controllers.User.update(id: String)
+DELETE  /api/user/:id               controllers.User.delete(id: String)
 
 
 

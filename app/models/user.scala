@@ -47,8 +47,13 @@ object UserModel {
         )(User.apply)(User.unapply)
     }
 
-    def create (data: JsValue) {
-        val user = userForm.bind(data).get
+    def create (data: JsValue) : Boolean = {
+        val bind = userForm.bind(data)
+        if (bind.hasErrors) {
+            println(bind.errors)
+            return false
+        }
+        val user = bind.get
         val doc: Document = Document (
             "lastname"  -> user.lastname,
             "firstname" -> user.firstname,
@@ -56,12 +61,14 @@ object UserModel {
             "gender"    -> user.gender,
             "password"  -> user.password
         )
-        collection.insertOne(doc).results()
+        val result = collection.insertOne(doc).results()
+        return true
     }
 
     def get(id: String) : Document = {
         val result = collection.find(equal("_id", new ObjectId(id))).first().results()
-        return result.head
+        if(result.isEmpty) null
+        else result.head
     }
 
     val userUpdateForm: Form[UserUpdate] = Form {
@@ -74,19 +81,26 @@ object UserModel {
     }
 
     def update(id: String, data: JsValue) : Document = {
-        val user = userUpdateForm.bind(data).get
-        collection.findOneAndUpdate(equal("_id", new ObjectId(id))
+        val bind = userUpdateForm.bind(data)
+        if (bind.hasErrors) {
+            println(bind.errors);
+            return null
+        }
+        val user = bind.get
+        val find = collection.findOneAndUpdate(equal("_id", new ObjectId(id))
                         , combine(
                             Updates.set("lastname"   , user.lastname),
                             Updates.set("firstname"  , user.firstname),
                             Updates.set("gender"     , user.gender),
                             Updates.set("password"   , user.password)
                         )).results()
-        return this.get(id);
+        if (find.isEmpty) null
+        else this.get(id)
     }
 
     def delete(id: String) : Document = {
         val result = collection.findOneAndDelete(equal("_id", new ObjectId(id))).results()
-        return result.head;
+        if(result.isEmpty) null
+        else result.head
     }
 }
