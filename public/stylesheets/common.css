@@ -92,3 +92,32 @@ a img {
     color: #fff;
     background-color: #428bca;
 }
+
+.main {
+    display: table-cell;
+    padding: 20px 40px;
+    float: none;
+}
+
+.search {
+    margin: 30px 0;
+}
+
+.user-table tr > *:nth-child(1) { width:20%; }
+.user-table tr > *:nth-child(2) { width:20%; }
+.user-table tr > *:nth-child(3) { width:20%; }
+.user-table tr > *:nth-child(4) { width:25%; }
+.user-table tr > *:nth-child(5) { width:5%; }
+.user-table tr > *:nth-child(6) { width:10%; }
+.user-table td {
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.modal-dialog {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -150px auto 0 -300px;
+    width: 600px;
+}
