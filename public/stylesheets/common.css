@@ -114,10 +114,9 @@ a img {
     overflow: hidden;
 }
 
-.modal-dialog {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin: -150px auto 0 -300px;
-    width: 600px;
+.modal-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
 }

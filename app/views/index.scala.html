@@ -49,7 +49,7 @@
                     <td>{{data.gender}}</td>
                     <td>
                         <button type="button" class="edit btn btn-primary"  v-on:click="edit(data)">編輯</button>
-                        <button type="button" class="btn btn-danger" v-on:click="delete(data)">刪除</button>
+                        <button type="button" class="btn btn-danger" v-on:click="delConfirm(data)">刪除</button>
                     </td>
                 </tr>
             </template>
@@ -66,30 +66,125 @@
         </ul>
     </nav>
 -->
+    <del-modal v-bind:data="deldata"></del-modal>
 </div>
-<div id="delModal" class="confirm-delete modal fade" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
-                <h4 class="modal-title">
-                    刪除確認
-                </h4>
-            </div>
-            <div class="modal-body">
-                請問是否刪除此筆資料?
-                <div class='text-danger' id='delModalData'></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" id="btn_confirm_del">刪除</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+}
+
+<div id="editModal" class="modal fade" tabindex="-1">
+    <div class="modal-center">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    <h4 class="modal-title">
+                        編輯使用者資料
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <validator name="validation1">
+                        <form class="form-horizontal" onsubmit="return false;" novalidate>
+                            <input type="hidden" value="{{food.id}}" v-model="id">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><span class="red">*</span> 名字</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="firstname" name="firstname" value="" placeholder="例如：小明" v-model="firstname" v-validate:name.required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><span class="red">*</span> 姓式</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="lastname" name="lastname" value="" placeholder="例如：王" v-model="lastname" v-validate:company.required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"><span class="red">*</span> Email</label>
+                                <div class="col-sm-10">
+                                    <input type="email" class="form-control" id="email" name="email" value="" placeholder="例如：youremail@@gmail.com" v-model="email">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">性別</label>
+                                <div class="col-sm-10">
+                                    <select class="form-control" id="gender" name="gender">
+                                        <option value='隱藏'>隱藏</option>
+                                        <option value='男'>男</option>
+                                        <option value='女'>女</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                    </validator>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" v-on:click="onSubmit()" v-bind:disabled="$validation1.invalid || this.processing" disabled>確定</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
-}
-
 <script>
+//vue component
+var DelModal = Vue.extend({
+    template:   '<div id="delModal" class="confirm-delete modal fade" tabindex="-1">'
+                    +'<div class="modal-center">'
+                        +'<div class="modal-dialog">'
+                            +'<div class="modal-content">'
+                                +'<div class="modal-header">'
+                                    +'<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>'
+                                    +'<h4 class="modal-title">'
+                                        +'刪除確認'
+                                    +'</h4>'
+                                +'</div>'
+                                +'<div class="modal-body">'
+                                    +'請問是否刪除此筆資料?'
+                                    +'<div class="text-danger">{{delname}}</div>'
+                                +'</div>'
+                                +'<div class="modal-footer">'
+                                    +'<button type="button" class="btn btn-danger"v-on:click="delData()" v-bind:disabled="process">刪除</button>'
+                                    +'<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>'
+                                +'</div>'
+                            +'</div>'
+                        +'</div>'
+                    +'</div>'
+                +'</div>',
+    props: ['data'],
+    ready: function() {
+        this.delModal = $('#delModal');
+    },
+    data: function () {
+        return {
+            process: false,
+        };
+    },
+    methods: {
+        delData: function() {
+            var id = this.data._id.$oid;
+            if (!id) return;
+            var that = this;
+            that.process = true;
+            that.$http.delete("/api/user/" + id, function (response, status, request) {
+                that.process = false;
+                that.$parent.list.$remove(this.data)
+                that.$parent.find = (that.$parent.list.length > 0) ? true : false;
+                that.delModal.modal('hide');
+            }).error(function (response, status, request) {
+                that.process = false;
+                console.log(response);
+                that.delModal.modal('hide');
+            });
+        }
+    },
+    computed: {
+        delname: {
+            get: function () {
+                return this.data.firstname + ' ' + this.data.lastname + ' (' + this.data.email +')';
+            },
+        }
+    }
+});
+Vue.component('del-modal', DelModal);
+
 var userManagement = new Vue({
     el: '.user-management',
     data: {
@@ -97,7 +192,8 @@ var userManagement = new Vue({
         q: "",
         find: false,
         error: false,
-        deleteModal: false
+        deleteModal: false,
+        deldata: {},
     },
     methods: {
         search: function() {
@@ -114,28 +210,14 @@ var userManagement = new Vue({
                 that.error = true;
             });
         },
-        delete: function(data) {
-            var id = data._id.$oid;
-            if (!id) return;
-            var that = this;
-            var delModal = $('#delModal');
-            delModal.find('#delModalData').html(data.firstname + " " + data.lastname + " (" + data.email +")");
-            delModal.find('#btn_confirm_del').unbind();
-            delModal.find('#btn_confirm_del').bind('click', function() {
-                that.$http.delete("/api/user/" + id, function (response, status, request) {
-                    that.list.$remove(data)
-                    delModal.modal('hide');
-                    that.find = (that.list.length > 0) ? true : false;
-                }).error(function (response, status, request) {
-                    console.log(response);
-                    delModal.modal('hide');
-                });
-            });
-            delModal.modal();
-
+        delConfirm: function(data) {
+            this.deldata = data;
+            $('#delModal').modal();
         },
         edit: function(data) {
             console.log(data);
+            var editModal = $('#editModal');
+            editModal.modal();
         },
     }
 });
