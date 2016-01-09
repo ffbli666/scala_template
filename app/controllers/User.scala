@@ -9,7 +9,7 @@ class User extends Controller {
 
     def create = Action(parse.json) { implicit request =>
         val result = UserModel.create(request.body)
-        if (!result) {
+        if (result == null) {
             Status(400)(Json.parse("""
             {
               "status" : 400,
@@ -21,7 +21,8 @@ class User extends Controller {
             Ok(Json.parse("""
             {
               "status" : 200,
-              "msg" : "ok"
+              "msg" : "ok",
+              "result" : """ + result.toJson() + """
             }
             """))
         }

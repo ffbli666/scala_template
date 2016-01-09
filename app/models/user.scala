@@ -26,15 +26,13 @@ case class User (
     firstname: String,
     lastname: String,
     email: String,
-    gender: String,
-    password: String
+    gender: String
 )
 
 case class UserUpdate (
     firstname: String,
     lastname: String,
-    gender: String,
-    password: String
+    gender: String
 )
 
 object UserModel {
@@ -47,27 +45,26 @@ object UserModel {
           "lastname"  -> nonEmptyText,
           "firstname" -> nonEmptyText,
           "email"     -> email,
-          "gender"    -> nonEmptyText,
-          "password"  -> nonEmptyText
+          "gender"    -> nonEmptyText
         )(User.apply)(User.unapply)
     }
 
-    def create (data: JsValue) : Boolean = {
+    def create (data: JsValue) : Document = {
         val bind = userForm.bind(data)
         if (bind.hasErrors) {
             println(bind.errors)
-            return false
+            return null
         }
         val user = bind.get
         val doc: Document = Document (
             "lastname"  -> user.lastname,
             "firstname" -> user.firstname,
             "email"     -> user.email,
-            "gender"    -> user.gender,
-            "password"  -> user.password
+            "gender"    -> user.gender
         )
-        val result = collection.insertOne(doc).results()
-        return true
+        collection.insertOne(doc).results()
+        val result = collection.find().sort(descending("_id")).limit(1).results()
+        return result.head
     }
 
     def get (id: String) : Document = {
@@ -85,8 +82,7 @@ object UserModel {
         mapping(
           "lastname"  -> nonEmptyText,
           "firstname" -> nonEmptyText,
-          "gender"    -> nonEmptyText,
-          "password"  -> nonEmptyText
+          "gender"    -> nonEmptyText
         )(UserUpdate.apply)(UserUpdate.unapply)
     }
 
@@ -101,8 +97,7 @@ object UserModel {
                         , combine(
                             Updates.set("lastname"   , user.lastname),
                             Updates.set("firstname"  , user.firstname),
-                            Updates.set("gender"     , user.gender),
-                            Updates.set("password"   , user.password)
+                            Updates.set("gender"     , user.gender)
                         )).results()
         if (find.isEmpty) null
         else this.get(id)
