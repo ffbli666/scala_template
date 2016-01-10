@@ -89,10 +89,10 @@ var EditModal = Vue.extend({
                                                     +'<input type="text" class="form-control" id="lastname" name="lastname" placeholder="例如：王" v-model="lastname" v-validate:lastname="[\'required\']">'
                                                 +'</div>'
                                             +'</div>'
-                                            +'<div class="form-group">'
+                                            +'<div class="form-group email-group">'
                                                 +'<label class="col-sm-2 control-label"><span class="red">*</span> Email</label>'
                                                 +'<div class="col-sm-10">'
-                                                    +'<input type="email" class="form-control" id="email" name="email" placeholder="例如：useremail@gmail.com" v-model="email" v-validate:email="[\'required\']" v-bind:disabled="!create">'
+                                                    +'<input type="email" class="form-control" id="email" name="email" placeholder="例如：useremail@gmail.com" v-model="email" v-validate:email="[\'required\']" v-bind:disabled="!create" v-on:blur="checkEmail()">'
                                                 +'</div>'
                                             +'</div>'
                                             +'<div class="form-group">'
@@ -129,8 +129,24 @@ var EditModal = Vue.extend({
         };
     },
     methods: {
+        init : function() {
+            $(".has-error").removeClass("has-error");
+            this.error = "";
+            this.process = false;
+        },
+        checkEmail: function() {
+            if(!validator.isEmail(this.email)) {
+                $(".email-group").addClass("has-error");
+                this.error = "Email 格式不正確";
+                return false;
+            }
+            $(".email-group").removeClass("has-error");
+            this.error = "";
+            return true
+        },
         createData : function() {
             var that = this;
+            if (!that.checkEmail()) return;
             that.process = true;
             var data = {
                 firstname : that.firstname,

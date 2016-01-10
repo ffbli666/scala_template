@@ -102,6 +102,7 @@ var userManagement = new Vue({
             });
         },
         create: function(data) {
+            if(this.emcreate != true) this.$refs.editmodal.init();
             this.emcreate = true;
             this.editdata = data;
             $('#editModal').modal();
@@ -110,6 +111,7 @@ var userManagement = new Vue({
             this.list.splice(0, 0, data);
         },
         edit: function(data) {
+            if(this.emcreate != false) this.$refs.editmodal.init();
             this.emcreate = false;
             this.editdata = data;
             $('#editModal').modal();
