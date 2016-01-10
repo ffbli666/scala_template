@@ -1,4 +1,3 @@
-//vue component
 var DelModal = Vue.extend({
     template:   '<div id="delModal" class="confirm-delete modal fade" tabindex="-1">'
                     +'<div class="modal-center">'
@@ -51,7 +50,7 @@ var DelModal = Vue.extend({
     computed: {
         delname: {
             get: function () {
-                return this.data.firstname + ' ' + this.data.lastname + ' (' + this.data.email +')';
+                return this.data.fullname + ' (' + this.data.email +')';
             },
         }
     }
