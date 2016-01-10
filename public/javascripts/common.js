@@ -33,7 +33,7 @@ var DelModal = Vue.extend({
     },
     methods: {
         delData: function() {
-            var id = this.data._id.$oid;
+            var id = this.data.id;
             if (!id) return;
             var that = this;
             that.process = true;

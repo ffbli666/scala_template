@@ -42,7 +42,7 @@
         <tbody>
             <template v-for="data in list">
                 <tr>
-                    <td>{{data._id.$oid}}</td>
+                    <td>{{data.id}}</td>
                     <td>{{data.firstname}}</td>
                     <td>{{data.lastname}}</td>
                     <td>{{data.email}}</td>
@@ -66,7 +66,7 @@
         </ul>
     </nav>
 -->
-    <edit-modal v-bind:create="emcreate" v-bind:id="editdata._id.$oid" v-bind:firstname="editdata.firstname" v-bind:lastname="editdata.lastname" v-bind:email="editdata.email" v-bind:gender="editdata.gender" v-ref:editmodal></edit-modal>
+    <edit-modal v-bind:create="emcreate" v-bind:id="editdata.id" v-bind:firstname="editdata.firstname" v-bind:lastname="editdata.lastname" v-bind:email="editdata.email" v-bind:gender="editdata.gender" v-ref:editmodal></edit-modal>
     <del-modal v-bind:data="deldata" v-ref:delmodal></del-modal>
 </div>
 
@@ -115,10 +115,10 @@ var userManagement = new Vue({
             $('#editModal').modal();
         },
         updateUser: function(data) {
-            var index = this.list.map(function(e) { return e._id.$oid; }).indexOf(data.id);
+            var index = this.list.map(function(e) { return e.id; }).indexOf(data.id);
             if (index < 0) return;
             var newdata = {
-                _id: {$oid: data.id},
+                id        : data.id,
                 firstname : data.firstname,
                 lastname  : data.lastname,
                 email     : data.email,

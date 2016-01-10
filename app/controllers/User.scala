@@ -4,6 +4,7 @@ import models._
 import play.api._
 import play.api.mvc._
 import play.api.libs.json._
+import scala.util.parsing.json._
 
 class User extends Controller {
 
@@ -22,7 +23,7 @@ class User extends Controller {
             {
               "status" : 200,
               "msg" : "ok",
-              "result" : """ + result.toJson() + """
+              "result" : """ + JSONObject(result) + """
             }
             """))
         }
@@ -30,12 +31,11 @@ class User extends Controller {
 
     def search = Action { implicit request =>
         val result = UserModel.search
-        val list = result.map(res =>  Json.parse(res.toJson))
         Ok(Json.parse("""
             {
               "status" : 200,
               "msg" : "ok",
-              "result" : """ + Json.toJson(list) + """
+              "result" : """ + Json.toJson(result) + """
             }
             """))
     }
@@ -55,7 +55,7 @@ class User extends Controller {
             {
               "status" : 200,
               "msg" : "ok",
-              "result" : """ + result.toJson() + """
+              "result" : """ + JSONObject(result) + """
             }
             """))
         }
@@ -76,7 +76,7 @@ class User extends Controller {
             {
               "status" : 200,
               "msg" : "ok",
-              "result" : """ + result.toJson() + """
+              "result" : """ + JSONObject(result) + """
             }
             """))
         }
@@ -93,6 +93,7 @@ class User extends Controller {
             """))
         }
         else {
+            println(result);
             Ok(Json.parse("""
             {
               "status" : 200,
