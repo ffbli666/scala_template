@@ -26,14 +26,15 @@
     </div>
     <button type="button" class="btn btn-primary" v-on:click="create()">新增使用者</button>
 
-    <div v-show="!find" class="alert alert-warning text-center" style="display:none" >目前尚無資料</div>
+    <div v-show="list.length <= 0" class="alert alert-warning text-center" style="display:none" >目前尚無資料</div>
 
-    <table v-show="find" class="user-list table table-striped table-hover user-table" style="display:none">
+    <table v-show="list.length > 0" class="user-list table table-striped table-hover user-table" style="display:none">
         <thead>
             <tr>
                 <td>ID</td>
+                <td>全名</td>
                 <td>名字</td>
-                <td>姓式</td>
+                <td>姓氏</td>
                 <td>Email</td>
                 <td>性別</td>
                 <td>功能</td>
@@ -43,6 +44,7 @@
             <template v-for="data in list">
                 <tr>
                     <td>{{data.id}}</td>
+                    <td>{{data.fullname}}</td>
                     <td>{{data.firstname}}</td>
                     <td>{{data.lastname}}</td>
                     <td>{{data.email}}</td>
@@ -80,7 +82,6 @@ var userManagement = new Vue({
     data: {
         list : [],
         q : "",
-        find : false,
         error : false,
         deldata : {},
         editdata : {},
@@ -96,7 +97,6 @@ var userManagement = new Vue({
                 data.result.forEach(function(element, index, array){
                     that.list.push(element);
                 });
-                that.find = (that.list.length > 0) ? true : false;
             }).error(function (data, status, request) {
                 that.error = true;
             });
@@ -108,7 +108,12 @@ var userManagement = new Vue({
             $('#editModal').modal();
         },
         insertUser: function(data) {
-            this.list.splice(0, 0, data);
+            if (this.list.length == 0){
+                this.list.push(data);
+            }
+            else {
+                this.list.splice(0, 0, data);
+            }
         },
         edit: function(data) {
             var that = this;
@@ -126,14 +131,7 @@ var userManagement = new Vue({
         updateUser: function(data) {
             var index = this.list.map(function(e) { return e.id; }).indexOf(data.id);
             if (index < 0) return;
-            var newdata = {
-                id        : data.id,
-                firstname : data.firstname,
-                lastname  : data.lastname,
-                email     : data.email,
-                gender    : data.gender
-            };
-            this.list.splice(index, 1, newdata);
+            this.list.splice(index, 1, data);
         },
         delConfirm: function(data) {
             this.deldata = data;
@@ -141,7 +139,6 @@ var userManagement = new Vue({
         },
         delUser: function(data) {
             this.list.$remove(data)
-            this.find = (this.list.length > 0) ? true : false;
         }
     }
 });

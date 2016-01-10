@@ -84,7 +84,7 @@ var EditModal = Vue.extend({
                                                 +'</div>'
                                             +'</div>'
                                             +'<div class="form-group">'
-                                                +'<label class="col-sm-2 control-label"><span class="red">*</span> 姓式</label>'
+                                                +'<label class="col-sm-2 control-label"><span class="red">*</span> 姓氏</label>'
                                                 +'<div class="col-sm-10">'
                                                     +'<input type="text" class="form-control" id="lastname" name="lastname" placeholder="例如：王" v-model="lastname" v-validate:lastname="[\'required\']">'
                                                 +'</div>'
@@ -99,9 +99,9 @@ var EditModal = Vue.extend({
                                                 +'<label class="col-sm-2 control-label">性別</label>'
                                                 +'<div class="col-sm-10">'
                                                     +'<select class="form-control" id="gender" name="gender" v-model="gender" v-validate:gender="[\'required\']">'
-                                                        +'<option value="隱藏">隱藏</option>'
                                                         +'<option value="男">男</option>'
                                                         +'<option value="女">女</option>'
+                                                        +'<option value="隱藏">隱藏</option>'
                                                     +'</select>'
                                                 +'</div>'
                                             +'</div>'
@@ -181,9 +181,7 @@ var EditModal = Vue.extend({
             };
             that.$http.put("/api/user/" + that.id, data ,function (response, status, request) {
                 that.process = false;
-                data.id = that.id;
-                data.email = that.email
-                that.$parent.updateUser(data);
+                that.$parent.updateUser(response.result);
                 that.editModal.modal('hide');
             }).error(function (response, status, request) {
                 that.process = false;
