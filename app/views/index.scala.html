@@ -111,10 +111,17 @@ var userManagement = new Vue({
             this.list.splice(0, 0, data);
         },
         edit: function(data) {
-            if(this.emcreate != false) this.$refs.editmodal.init();
-            this.emcreate = false;
-            this.editdata = data;
-            $('#editModal').modal();
+            var that = this;
+            if(!data.id) return;
+            that.$http.get("/api/user/" + data.id, function (response, status, request) {
+                if(this.emcreate != false) that.$refs.editmodal.init();
+                that.emcreate = false;
+                that.editdata = response.result;
+                that.updateUser(response.result);
+                $('#editModal').modal();
+            }).error(function (response, status, request) {
+                console.log(response);
+            });
         },
         updateUser: function(data) {
             var index = this.list.map(function(e) { return e.id; }).indexOf(data.id);
