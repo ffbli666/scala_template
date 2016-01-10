@@ -37,7 +37,7 @@ case class UserUpdate (
 
 object UserModel {
     val mongoClient: MongoClient = MongoClient("mongodb://localhost")
-    val database: MongoDatabase = mongoClient.getDatabase("htc")
+    val database: MongoDatabase = mongoClient.getDatabase("management")
     val collection: MongoCollection[Document] = database.getCollection("user")
 
     val Pattern = """[^\-a-zA-Z]""".r

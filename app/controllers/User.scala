@@ -13,17 +13,17 @@ class User extends Controller {
         if (result == null) {
             Status(400)(Json.parse("""
             {
-              "status" : 400,
-              "msg" : "bad request"
+               "status" : 400,
+               "msg" : "bad request"
             }
             """))
         }
         else {
             Ok(Json.parse("""
             {
-              "status" : 200,
-              "msg" : "ok",
-              "result" : """ + JSONObject(result) + """
+               "status" : 200,
+               "msg" : "ok",
+               "result" : """ + JSONObject(result) + """
             }
             """))
         }
@@ -33,9 +33,9 @@ class User extends Controller {
         val result = UserModel.search
         Ok(Json.parse("""
             {
-              "status" : 200,
-              "msg" : "ok",
-              "result" : """ + Json.toJson(result) + """
+               "status" : 200,
+               "msg" : "ok",
+               "result" : """ + Json.toJson(result) + """
             }
             """))
     }
@@ -45,17 +45,17 @@ class User extends Controller {
         if (result == null) {
             Status(404)(Json.parse("""
             {
-              "status" : 404,
-              "msg" : "not found"
+               "status" : 404,
+               "msg" : "not found"
             }
             """))
         }
         else {
             Ok(Json.parse("""
             {
-              "status" : 200,
-              "msg" : "ok",
-              "result" : """ + JSONObject(result) + """
+               "status" : 200,
+               "msg" : "ok",
+               "result" : """ + JSONObject(result) + """
             }
             """))
         }
@@ -66,8 +66,8 @@ class User extends Controller {
         if (result == null) {
             Status(404)(Json.parse("""
             {
-              "status" : 404,
-              "msg" : "not found"
+               "status" : 404,
+               "msg" : "not found"
             }
             """))
         }
