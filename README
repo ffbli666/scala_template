@@ -1,4 +1,10 @@
-This is your new Play application
+Scala Template
 =================================
 
-This file will be packaged with your application, when using `activator dist`.
+### Install
+1. migration database `mongo bin/migration.js`
+
+
+### Start Service
+1. start the service `./activator "run 8888"`
+2. use browser to the url `http://localhost:8888`
