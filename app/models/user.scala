@@ -98,7 +98,6 @@ object UserModel {
         val count = 20
         collection.find().sort(descending("_id")).limit(count).results().map(
             res => {
-                println(res)
                 _docToMap(res)
             }
         )
