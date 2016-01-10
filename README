@@ -1,5 +1,9 @@
 Scala Template
 =================================
+### Environment
+
+* play framework 2.4.6
+* mongodb 3.2.0
 
 ### Install
 1. migration database `mongo bin/migration.js`
